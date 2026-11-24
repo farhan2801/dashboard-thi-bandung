@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Indeks Kenyamanan Kota Bandung</title>
+  <meta name="description" content="Prakiraan kenyamanan termal (THI) per kecamatan di Kota Bandung, berbasis data prakiraan cuaca BMKG.">
+  <meta name="theme-color" content="#fcfcfb">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body class="memuat">
+  <main class="halaman">
+
+    <!-- Zona 1 — Kepala -->
+    <header class="kepala">
+      <h1>Indeks Kenyamanan Kota Bandung</h1>
+      <label class="pilih" for="pilih-kecamatan">
+        <span>Kecamatan</span>
+        <select id="pilih-kecamatan"><option>Memuat…</option></select>
+      </label>
+      <p id="waktu-pembaruan" class="redup">Memuat data…</p>
+    </header>
+
+    <div id="peringatan" class="peringatan" role="status" hidden></div>
+
+    <!-- Zona 2 — Kartu utama -->
+    <section id="kartu-utama" class="kartu kartu-utama" aria-live="polite">
+      <p class="label-kecil">THI saat ini <span class="tag">prakiraan</span></p>
+      <p id="nama-kecamatan" class="nama-kecamatan"></p>
+      <p id="cakupan-kecamatan" class="redup kecil"></p>
+      <p class="nilai-besar"><span id="thi-nilai">–</span><span class="satuan">°C</span></p>
+      <p id="thi-kategori" class="badge">Memuat…</p>
+      <p id="thi-slot" class="redup kecil"></p>
+    </section>
+
+    <!-- Zona 3 — Kartu pendukung -->
+    <section class="pendukung" aria-label="Kondisi cuaca pendukung">
+      <div class="kartu kecil-kartu"><p class="label-kecil">Suhu</p><p id="nilai-suhu" class="nilai">–</p></div>
+      <div class="kartu kecil-kartu"><p class="label-kecil">Kelembapan</p><p id="nilai-kelembapan" class="nilai">–</p></div>
+      <div class="kartu kecil-kartu"><p class="label-kecil">Cuaca</p><p id="nilai-cuaca" class="nilai teks">–</p></div>
+      <p id="nilai-angin" class="redup kecil angin"></p>
+    </section>
+
+    <!-- Zona 4 — Grafik tren -->
+    <section class="kartu">
+      <h2>Tren THI per 3 jam</h2>
+      <p class="redup kecil">Garis tegas: 24 jam terakhir · garis putus-putus: prakiraan ke depan</p>
+      <div id="grafik-tren" class="grafik"></div>
+      <details class="tabel-data">
+        <summary>Lihat data dalam tabel</summary>
+        <div class="gulir">
+          <table>
+            <thead><tr><th>Waktu (WIB)</th><th>Suhu °C</th><th>RH %</th><th>THI</th><th>Kategori</th><th>Jenis</th></tr></thead>
+            <tbody id="tabel-tren"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- Zona 5 — Penjelasan -->
+    <section class="kartu penjelasan">
+      <h2>Arti kategori dan saran</h2>
+      <p id="arti-kategori"></p>
+      <p id="saran-kategori"></p>
+      <p id="ringkasan-hari" class="redup"></p>
+      <ul id="legenda-kategori" class="legenda"></ul>
+      <details>
+        <summary>Apa itu THI dan apa batasannya?</summary>
+        <p>Temperature Humidity Index (THI) menggabungkan suhu udara dan kelembapan relatif menjadi satu angka
+          (THI = 0,8 × T + RH × T / 500; Nieuwolt, 1977). Kategori mengikuti klasifikasi BMKG.</p>
+        <p>THI tidak memperhitungkan angin, sinar matahari, aktivitas, pakaian, maupun kondisi tubuh masing-masing
+          orang, sehingga yang kamu rasakan bisa berbeda. Gunakan sebagai gambaran umum, bukan ukuran pasti.</p>
+        <p>Nilai tiap kecamatan adalah rata-rata prakiraan BMKG untuk kelurahan di kecamatan tersebut,
+          bukan hasil pengukuran langsung di lokasimu.</p>
+      </details>
+    </section>
+
+    <!-- Zona 6 — Ajakan -->
+    <section class="ajakan">
+      <a id="tombol-formulir" class="tombol" href="#" target="_blank" rel="noopener" hidden>Isi formulir umpan balik</a>
+    </section>
+
+    <!-- Zona 7 — Kaki halaman -->
+    <footer class="kaki">
+      <p><strong>Sumber data: BMKG</strong> (Badan Meteorologi, Klimatologi, dan Geofisika), prakiraan cuaca per kelurahan.</p>
+      <p>Nilai bersifat prakiraan, bukan pengukuran langsung, bukan diagnosis kesehatan, dan bukan peringatan resmi.
+        Untuk informasi resmi, rujuk BMKG.</p>
+      <p>Klasifikasi THI: BMKG; Wati &amp; Fatkhuroyan (2017). Dikembangkan oleh Kelompok 7, Program Studi Meteorologi ITB.</p>
+    </footer>
+  </main>
+</body>
+</html>

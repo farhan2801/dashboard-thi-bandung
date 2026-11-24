@@ -1,0 +1,47 @@
+# Mengambil prakiraan BMKG secara otomatis dan menyimpan hasilnya ke folder public/data.
+# Berjalan tiap 3 jam (menit ke-15, waktu UTC) dan bisa dijalankan manual dari tab Actions.
+name: Update data BMKG
+
+on:
+  schedule:
+    - cron: '15 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Ambil kode repositori
+        uses: actions/checkout@v4
+
+      - name: Siapkan Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Uji rumus THI
+        run: npm test
+
+      - name: Ambil dan olah data BMKG
+        run: npm run update-data
+
+      - name: Simpan data ke repositori
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan data."
+          else
+            git commit -m "data: pembaruan BMKG $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git pull --rebase
+            git push
+          fi
