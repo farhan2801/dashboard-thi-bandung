@@ -1,7 +1,7 @@
 {
-  "contoh": true,
-  "generated_at": "2026-11-24T09:06:04.533Z",
-  "analysis_date": "2026-11-24T09:00:00",
+  "contoh": false,
+  "generated_at": "2026-11-24T09:45:38.264Z",
+  "analysis_date": "2026-11-24T00:00:00",
   "kelurahan_total": 151,
   "kelurahan_ok": 151,
   "kecamatan_ok": 30,
@@ -9,5 +9,5 @@
   "riwayat_bulan": [
     "2026-11"
   ],
-  "sumber": "DATA CONTOH — bukan data BMKG"
+  "sumber": "BMKG (Badan Meteorologi, Klimatologi, dan Geofisika)"
 }
