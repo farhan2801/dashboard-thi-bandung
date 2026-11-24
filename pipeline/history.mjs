@@ -22,13 +22,26 @@ export function perbaruiRiwayat(dirRiwayat, agregat) {
   fs.mkdirSync(dirRiwayat, { recursive: true });
   const perBulan = new Map();
 
+  const muatBulan = (bulan) => {
+    if (!perBulan.has(bulan)) {
+      perBulan.set(bulan, bacaJson(path.join(dirRiwayat, `${bulan}.json`), { bulan, kecamatan: {} }));
+    }
+    return perBulan.get(bulan);
+  };
+
   for (const [kode, kec] of Object.entries(agregat.kecamatan)) {
+    if (kec.slots.length === 0) continue;
+    // Slot yang belum lewat tetapi tidak ada lagi di prakiraan terbaru dibuang
+    // (mis. bila BMKG mengubah jam slot), sehingga yang tersisa hanya prakiraan terbaru.
+    const awal = kec.slots[0].time;
+    const baru = new Set(kec.slots.map((s) => s.time));
+    for (const bulan of new Set(kec.slots.map((s) => bulanDari(s.time)))) {
+      const slotsLama = muatBulan(bulan).kecamatan[kode] ?? {};
+      for (const time of Object.keys(slotsLama)) if (time >= awal && !baru.has(time)) delete slotsLama[time];
+    }
     for (const s of kec.slots) {
       const bulan = bulanDari(s.time);
-      if (!perBulan.has(bulan)) {
-        perBulan.set(bulan, bacaJson(path.join(dirRiwayat, `${bulan}.json`), { bulan, kecamatan: {} }));
-      }
-      const data = perBulan.get(bulan);
+      const data = muatBulan(bulan);
       data.kecamatan[kode] ??= {};
       const { time, ...nilai } = s;
       delete nilai.n;

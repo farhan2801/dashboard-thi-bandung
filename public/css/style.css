@@ -44,7 +44,8 @@ body {
   line-height: 1.5;
 }
 .halaman { max-width: 560px; margin: 0 auto; padding: 16px 16px 40px; display: grid; gap: 14px; }
-h1 { font-size: 1.25rem; margin: 0 0 8px; }
+h1 { font-size: 1.25rem; margin: 0 0 2px; }
+.kepala { display: grid; gap: 10px; }
 h2 { font-size: 1.05rem; margin: 0 0 2px; }
 p { margin: 0; }
 .redup { color: var(--teks-2); }
@@ -52,7 +53,7 @@ p { margin: 0; }
 .label-kecil { font-size: 0.8rem; color: var(--teks-2); }
 
 /* Zona 1 */
-.pilih { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.9rem; color: var(--teks-2); }
+.pilih { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--teks-2); }
 select {
   flex: 1; font: inherit; font-size: 1rem; color: var(--teks); background: var(--kartu);
   border: 1px solid var(--sumbu); border-radius: 8px; padding: 10px 12px; min-height: 44px;
@@ -156,3 +157,46 @@ th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--gari
 .kaki strong { color: var(--teks); }
 
 body.memuat .nilai-besar { opacity: 0.4; }
+
+/* ---------- Tablet (≥ 640px) ---------- */
+@media (min-width: 640px) {
+  .halaman { max-width: 680px; padding: 24px; gap: 16px; }
+  h1 { font-size: 1.5rem; }
+  .legenda { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Laptop/desktop (≥ 960px): dua kolom ---------- */
+@media (min-width: 960px) {
+  .halaman {
+    max-width: 1180px;
+    padding: 28px 32px 48px;
+    gap: 18px 24px;
+    grid-template-columns: minmax(320px, 380px) 1fr;
+    grid-template-areas:
+      "kepala     kepala"
+      "peringatan peringatan"
+      "utama      tren"
+      "pendukung  tren"
+      "ajakan     tren"
+      "penjelasan penjelasan"
+      "kaki       kaki";
+    align-items: start;
+  }
+  .zona-kepala { grid-area: kepala; grid-template-columns: 1fr minmax(260px, 340px); align-items: center; }
+  .zona-peringatan { grid-area: peringatan; }
+  .zona-utama { grid-area: utama; }
+  .zona-pendukung { grid-area: pendukung; }
+  .zona-ajakan { grid-area: ajakan; }
+  .zona-tren { grid-area: tren; align-self: stretch; display: flex; flex-direction: column; }
+  .zona-tren .grafik { flex: 1; min-height: 320px; }
+  .zona-penjelasan { grid-area: penjelasan; }
+  .zona-kaki { grid-area: kaki; }
+
+  h1 { font-size: 1.75rem; }
+  .nilai-besar { font-size: 4.5rem; }
+  .legenda { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .legenda li { flex-direction: column; border-color: var(--garis-halus); }
+  .legenda li.aktif { border-color: var(--teks-2); }
+  .tombol { transition: filter 0.15s; }
+  .tombol:hover { filter: brightness(1.08); }
+}

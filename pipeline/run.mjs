@@ -18,6 +18,8 @@ import { perbaruiRiwayat, tulisRiwayatTerkini } from './history.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIR_DATA = path.join(ROOT, 'public', 'data');
 const DIR_RIWAYAT = path.join(DIR_DATA, 'history');
+// Naikkan angka ini bila cara pengolahan berubah sehingga riwayat lama tidak sebanding lagi.
+const VERSI_DATA = 2;
 
 export async function jalankan({ fetchFn = fetch, jedaMs, log = console.log } = {}) {
   const wilayah = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'wilayah.json'), 'utf8'));
@@ -35,12 +37,12 @@ export async function jalankan({ fetchFn = fetch, jedaMs, log = console.log } = 
 
   const agregat = agregasi(wilayah, hasil);
 
-  // Data contoh (bawaan repositori) dihapus pada pengambilan sungguhan pertama,
-  // supaya riwayat tidak tercampur dengan data contoh.
+  // Riwayat dihapus bila berasal dari data contoh atau dari versi pipeline lama
+  // (versi 1 belum menyelaraskan jam slot antarkelurahan), supaya tidak tercampur.
   const metaLama = (() => { try { return JSON.parse(fs.readFileSync(path.join(DIR_DATA, 'meta.json'), 'utf8')); } catch { return {}; } })();
-  if (metaLama.contoh) {
+  if (metaLama.contoh || (metaLama.versi_data ?? 1) < VERSI_DATA) {
     fs.rmSync(DIR_RIWAYAT, { recursive: true, force: true });
-    log('Data contoh dihapus.');
+    log('Riwayat lama (data contoh / versi pipeline lama) dihapus.');
   }
 
   fs.mkdirSync(DIR_DATA, { recursive: true });
@@ -56,6 +58,8 @@ export async function jalankan({ fetchFn = fetch, jedaMs, log = console.log } = 
 
   fs.writeFileSync(path.join(DIR_DATA, 'meta.json'), JSON.stringify({
     contoh: false,
+    versi_data: VERSI_DATA,
+    kisi_jam_wib: [0, 1, 2].map((j) => agregat.kisi_jam + j * 3).map((j) => `${String(j).padStart(2, '0')}.00`).join(', ') + ', …',
     generated_at: sekarang,
     analysis_date: agregat.analysis_date,
     kelurahan_total: hasil.length,

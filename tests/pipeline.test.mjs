@@ -81,3 +81,41 @@ test('riwayat: slot baru di-upsert, slot lama dipertahankan', () => {
   assert.equal(data.kecamatan.K1['2026-12-01T13:00:00+07:00'].thi, 27.3);
   assert.equal('n' in data.kecamatan.K1['2026-12-01T13:00:00+07:00'], false);
 });
+
+test('kelurahan dengan jam slot berbeda diselaraskan ke kisi mayoritas', async () => {
+  const { selaraskan, tentukanKisi } = await import('../pipeline/aggregate.mjs');
+  const mk = (jamList, t0) => jamList.map((j, i) => ({
+    time: `2026-12-01T${String(j).padStart(2, '0')}:00:00+07:00`, t: t0 + i * 3, hu: 80, ws: 6, cuaca: 'Berawan', wd: 'S',
+  }));
+  const mayoritas = [{ ok: true, slots: mk([2, 5, 8], 20) }, { ok: true, slots: mk([2, 5, 8], 20) }];
+  const minoritas = { ok: true, slots: mk([1, 4, 7, 10], 19) }; // t: 19, 22, 25, 28
+  assert.equal(tentukanKisi([...mayoritas, minoritas]), 2); // jam 02, 05, 08 → mod 3 = 2
+  const hasil = selaraskan(minoritas.slots, 2);
+  assert.deepEqual([...hasil.keys()].map((k) => k.slice(11, 13)), ['02', '05', '08']);
+  assert.equal(hasil.get('2026-12-01T02:00:00+07:00').t, 20); // 19 + (22-19)·1/3
+  assert.equal(hasil.get('2026-12-01T08:00:00+07:00').t, 26);
+});
+
+test('agregasi: semua kelurahan masuk ke setiap slot kisi', () => {
+  const wil = { kecamatan: [{ kode: 'K', nama: 'K', kelurahan: [{ kode: 'A' }, { kode: 'B' }, { kode: 'C' }] }] };
+  const s = (jam, t) => ({ time: `2026-12-01T${jam}:00:00+07:00`, t, hu: 80, ws: 5, cuaca: 'Cerah', wd: 'S' });
+  const hasil = [
+    { kode: 'A', ok: true, slots: [s('02', 20), s('05', 23), s('08', 26)] },
+    { kode: 'B', ok: true, slots: [s('02', 20), s('05', 23), s('08', 26)] },
+    { kode: 'C', ok: true, slots: [s('01', 19), s('04', 22), s('07', 25), s('10', 28)] },
+  ];
+  const a = agregasi(wil, hasil);
+  const slots = a.kecamatan.K.slots;
+  assert.deepEqual(slots.map((x) => x.time.slice(11, 13)), ['02', '05', '08']);
+  assert.ok(slots.every((x) => x.n === 3));
+  assert.equal(slots[1].t, 23);
+});
+
+test('riwayat: slot masa depan yang hilang dari prakiraan terbaru dibuang', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'riwayat-'));
+  const slot = (jam, thi) => ({ time: `2026-12-01T${jam}:00:00+07:00`, t: 25, hu: 80, thi, kategori: 'nyaman' });
+  perbaruiRiwayat(dir, { kecamatan: { K: { slots: [slot('01', 22), slot('04', 22), slot('07', 22)] } } });
+  perbaruiRiwayat(dir, { kecamatan: { K: { slots: [slot('05', 23), slot('08', 23)] } } });
+  const data = JSON.parse(fs.readFileSync(path.join(dir, '2026-12.json'), 'utf8'));
+  assert.deepEqual(Object.keys(data.kecamatan.K).map((k) => k.slice(11, 13)), ['01', '04', '05', '08']);
+});

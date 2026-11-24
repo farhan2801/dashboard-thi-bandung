@@ -29,7 +29,8 @@ export function renderTren(wadah, tabelBody, slots, nowMs, { jamLalu = 24, jamDe
   }
 
   const W = Math.max(300, wadah.clientWidth || 360);
-  const H = 230;
+  // Tinggi mengikuti wadah: 230px di ponsel, lebih tinggi di laptop (diatur lewat CSS)
+  const H = Math.round(Math.min(380, Math.max(230, wadah.clientHeight || 230)));
   const m = { l: 34, r: 10, t: 12, b: 30 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
 

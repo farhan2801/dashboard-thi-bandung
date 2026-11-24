@@ -14,19 +14,21 @@
   <main class="halaman">
 
     <!-- Zona 1 — Kepala -->
-    <header class="kepala">
-      <h1>Indeks Kenyamanan Kota Bandung</h1>
+    <header class="kepala zona-kepala">
+      <div class="judul">
+        <h1>Indeks Kenyamanan Kota Bandung</h1>
+        <p id="waktu-pembaruan" class="redup">Memuat data…</p>
+      </div>
       <label class="pilih" for="pilih-kecamatan">
         <span>Kecamatan</span>
         <select id="pilih-kecamatan"><option>Memuat…</option></select>
       </label>
-      <p id="waktu-pembaruan" class="redup">Memuat data…</p>
     </header>
 
-    <div id="peringatan" class="peringatan" role="status" hidden></div>
+    <div id="peringatan" class="peringatan zona-peringatan" role="status" hidden></div>
 
     <!-- Zona 2 — Kartu utama -->
-    <section id="kartu-utama" class="kartu kartu-utama" aria-live="polite">
+    <section id="kartu-utama" class="kartu kartu-utama zona-utama" aria-live="polite">
       <p class="label-kecil">THI saat ini <span class="tag">prakiraan</span></p>
       <p id="nama-kecamatan" class="nama-kecamatan"></p>
       <p id="cakupan-kecamatan" class="redup kecil"></p>
@@ -36,7 +38,7 @@
     </section>
 
     <!-- Zona 3 — Kartu pendukung -->
-    <section class="pendukung" aria-label="Kondisi cuaca pendukung">
+    <section class="pendukung zona-pendukung" aria-label="Kondisi cuaca pendukung">
       <div class="kartu kecil-kartu"><p class="label-kecil">Suhu</p><p id="nilai-suhu" class="nilai">–</p></div>
       <div class="kartu kecil-kartu"><p class="label-kecil">Kelembapan</p><p id="nilai-kelembapan" class="nilai">–</p></div>
       <div class="kartu kecil-kartu"><p class="label-kecil">Cuaca</p><p id="nilai-cuaca" class="nilai teks">–</p></div>
@@ -44,7 +46,7 @@
     </section>
 
     <!-- Zona 4 — Grafik tren -->
-    <section class="kartu">
+    <section class="kartu zona-tren">
       <h2>Tren THI per 3 jam</h2>
       <p class="redup kecil">Garis tegas: 24 jam terakhir · garis putus-putus: prakiraan ke depan</p>
       <div id="grafik-tren" class="grafik"></div>
@@ -60,7 +62,7 @@
     </section>
 
     <!-- Zona 5 — Penjelasan -->
-    <section class="kartu penjelasan">
+    <section class="kartu penjelasan zona-penjelasan">
       <h2>Arti kategori dan saran</h2>
       <p id="arti-kategori"></p>
       <p id="saran-kategori"></p>
@@ -78,12 +80,12 @@
     </section>
 
     <!-- Zona 6 — Ajakan -->
-    <section class="ajakan">
+    <section class="ajakan zona-ajakan">
       <a id="tombol-formulir" class="tombol" href="#" target="_blank" rel="noopener" hidden>Isi formulir umpan balik</a>
     </section>
 
     <!-- Zona 7 — Kaki halaman -->
-    <footer class="kaki">
+    <footer class="kaki zona-kaki">
       <p><strong>Sumber data: BMKG</strong> (Badan Meteorologi, Klimatologi, dan Geofisika), prakiraan cuaca per kelurahan.</p>
       <p>Nilai bersifat prakiraan, bukan pengukuran langsung, bukan diagnosis kesehatan, dan bukan peringatan resmi.
         Untuk informasi resmi, rujuk BMKG.</p>
