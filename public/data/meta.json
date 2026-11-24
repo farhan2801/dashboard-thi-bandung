@@ -1,6 +1,8 @@
 {
   "contoh": false,
-  "generated_at": "2026-11-24T09:45:38.264Z",
+  "versi_data": 2,
+  "kisi_jam_wib": "02.00, 05.00, 08.00, …",
+  "generated_at": "2026-11-24T10:09:41.024Z",
   "analysis_date": "2026-11-24T00:00:00",
   "kelurahan_total": 151,
   "kelurahan_ok": 151,
