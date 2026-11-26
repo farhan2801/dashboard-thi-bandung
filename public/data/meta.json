@@ -1,9 +1,9 @@
 {
   "contoh": false,
   "versi_data": 2,
-  "kisi_jam_wib": "01.00, 04.00, 07.00, …",
-  "generated_at": "2026-11-26T03:38:46.053Z",
-  "analysis_date": "2026-11-26T00:00:00",
+  "kisi_jam_wib": "00.00, 03.00, 06.00, …",
+  "generated_at": "2026-11-26T16:59:56.034Z",
+  "analysis_date": "2026-11-26T12:00:00",
   "kelurahan_total": 151,
   "kelurahan_ok": 151,
   "kecamatan_ok": 30,
