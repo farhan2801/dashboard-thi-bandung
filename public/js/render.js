@@ -64,7 +64,7 @@ export function isiPilihanKecamatan(latest, kodeTerpilih) {
 export function isiWaktuPembaruan(meta) {
   const ms = Date.parse(meta.generated_at);
   $('waktu-pembaruan').textContent = Number.isFinite(ms)
-    ? `Data diperbarui ${tanggal(ms)}, ${jam(ms)} WIB`
+    ? `Diperbarui ${tanggal(ms)}, ${jam(ms)} WIB`
     : 'Waktu pembaruan tidak diketahui';
 }
 

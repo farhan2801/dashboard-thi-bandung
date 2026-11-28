@@ -1,4 +1,4 @@
-# Dashboard Indeks Kenyamanan Kota Bandung
+# SiNyaman — Sistem Informasi Kenyamanan Termal Kota Bandung
 
 Dashboard prakiraan kenyamanan termal (Temperature Humidity Index, THI) untuk 30 kecamatan di Kota Bandung,
 berbasis data prakiraan cuaca BMKG. Proyek mata kuliah Diseminasi Meteorologi, Kelompok 7, Meteorologi ITB.
