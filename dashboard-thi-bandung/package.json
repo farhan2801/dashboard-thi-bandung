@@ -1,0 +1,14 @@
+{
+  "name": "dashboard-thi-bandung",
+  "version": "1.0.0",
+  "description": "Dashboard Indeks Kenyamanan Kota Bandung berbasis THI (data BMKG) — Kelompok 7 Meteorologi ITB",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "update-data": "node pipeline/run.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  }
+}

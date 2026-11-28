@@ -1,0 +1,15 @@
+{
+  "contoh": false,
+  "versi_data": 2,
+  "kisi_jam_wib": "00.00, 03.00, 06.00, …",
+  "generated_at": "2026-11-28T07:55:03.172Z",
+  "analysis_date": "2026-11-28T00:00:00",
+  "kelurahan_total": 151,
+  "kelurahan_ok": 151,
+  "kecamatan_ok": 30,
+  "gagal": [],
+  "riwayat_bulan": [
+    "2026-11"
+  ],
+  "sumber": "BMKG (Badan Meteorologi, Klimatologi, dan Geofisika)"
+}
