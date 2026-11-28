@@ -17,6 +17,11 @@
   --teks-di-warna: #ffffff;
   --teks-di-kuning: #0b0b0b;
   --pita-opasitas: 0.13;
+  /* Warna parameter cuaca (kotak pendukung) */
+  --p-suhu: #e8743b;
+  --p-rh: #1a9aa0;
+  --p-cuaca: #7f77dd;
+  --tint: 15%;
   --radius: 12px;
 }
 @media (prefers-color-scheme: dark) {
@@ -30,6 +35,7 @@
     --aksen: #3987e5;
     --k-dingin: #3987e5;
     --pita-opasitas: 0.2;
+    --tint: 24%;
   }
 }
 
@@ -44,6 +50,7 @@ body {
   line-height: 1.5;
 }
 .halaman { max-width: 560px; margin: 0 auto; padding: 16px 16px 40px; display: grid; gap: 14px; }
+.halaman > * { min-width: 0; } /* isi yang bisa digeser (prakiraan per jam) tidak melebarkan halaman */
 h1 { font-size: 1.25rem; margin: 0 0 2px; }
 .kepala { display: grid; gap: 10px; }
 h2 { font-size: 1.05rem; margin: 0 0 2px; }
@@ -93,18 +100,12 @@ select {
 .angin { grid-column: 1 / -1; text-align: center; }
 
 /* Zona 4 — grafik */
-.grafik { position: relative; margin-top: 10px; min-height: 230px; }
+.grafik { position: relative; margin-top: 10px; min-height: 260px; }
 .grafik svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
-.pita { stroke: none; opacity: var(--pita-opasitas); }
-.pita-dingin { fill: var(--k-dingin); }
-.pita-nyaman { fill: var(--k-nyaman); }
-.pita-agak-nyaman { fill: var(--k-agak-nyaman); }
-.pita-tidak-nyaman { fill: var(--k-tidak-nyaman); }
-.label-pita { font-size: 11px; fill: var(--teks-2); paint-order: stroke; stroke: var(--kartu); stroke-width: 3px; stroke-linejoin: round; }
 .grid { stroke: var(--garis-halus); stroke-width: 1; }
 .sumbu { stroke: var(--sumbu); stroke-width: 1; }
 .tick { font-size: 11px; fill: var(--teks-2); font-variant-numeric: tabular-nums; }
-.garis { fill: none; stroke: var(--teks); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.garis { fill: none; stroke-width: 2.75; stroke-linejoin: round; stroke-linecap: round; }
 .garis-prakiraan { stroke-dasharray: 5 4; }
 .sekarang { stroke: var(--teks-2); stroke-width: 1; stroke-dasharray: 2 3; }
 .label-sekarang { font-size: 11px; fill: var(--teks-2); }
@@ -165,38 +166,156 @@ body.memuat .nilai-besar { opacity: 0.4; }
   .legenda { grid-template-columns: 1fr 1fr; }
 }
 
-/* ---------- Laptop/desktop (≥ 960px): dua kolom ---------- */
+/* ---------- Peta ---------- */
+.zona-peta { display: flex; flex-direction: column; gap: 4px; }
+.peta {
+  height: 340px; margin-top: 8px; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--garis-halus); background: var(--halaman); z-index: 0;
+}
+.leaflet-container { font: inherit; }
+.peta-dasar { filter: grayscale(0.7) contrast(0.92) brightness(1.04); }
+@media (prefers-color-scheme: dark) {
+  .peta-dasar { filter: invert(1) hue-rotate(180deg) grayscale(0.75) brightness(0.8) contrast(0.95); }
+}
+.leaflet-tooltip { font-size: 0.8rem; font-weight: 600; }
+.wadah-titik { background: none; border: none; }
+.titik-kec {
+  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%);
+  width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+  color: var(--teks-di-warna); border: 2px solid #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.4); cursor: pointer;
+}
+.titik-kec.aktif { width: 30px; height: 30px; border-width: 2.5px; outline: 2.5px solid var(--teks); }
+@media (max-width: 639px) { .titik-kec { width: 18px; height: 18px; border-width: 1.5px; } .titik-kec .ikon { width: 10px; height: 10px; } }
+.label-titik {
+  position: absolute; left: 0; top: -24px; transform: translate(-50%, -100%); white-space: nowrap;
+  background: var(--kartu); color: var(--teks); border: 1px solid var(--sumbu); border-radius: 8px;
+  padding: 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; box-shadow: 0 1px 4px rgb(0 0 0 / 0.2);
+  pointer-events: none;
+}
+.label-titik b { font-weight: 700; margin-right: 2px; }
+.titik-dingin { background: var(--k-dingin); }
+.titik-nyaman { background: var(--k-nyaman); }
+.titik-agak-nyaman { background: var(--k-agak-nyaman); color: var(--teks-di-kuning); }
+.titik-tidak-nyaman { background: var(--k-tidak-nyaman); }
+.titik-kosong { background: var(--teks-2); }
+.legenda-peta { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--teks-2); }
+.legenda-peta li { display: flex; align-items: center; gap: 6px; }
+.legenda-peta .penanda { width: 20px; height: 20px; }
+.legenda-peta li[data-kategori="dingin"] .penanda { background: var(--k-dingin); }
+.legenda-peta li[data-kategori="nyaman"] .penanda { background: var(--k-nyaman); }
+.legenda-peta li[data-kategori="agak-nyaman"] .penanda { background: var(--k-agak-nyaman); color: var(--teks-di-kuning); }
+.legenda-peta li[data-kategori="tidak-nyaman"] .penanda { background: var(--k-tidak-nyaman); }
+
+/* ---------- Ikon cuaca di kartu pendukung ---------- */
+.nilai.teks { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ikon-cuaca { color: var(--teks-2); }
+
+/* ---------- Prakiraan per 3 jam ---------- */
+.prakiraan-jam {
+  list-style: none; margin: 10px -4px 0; padding: 4px 4px 10px; display: flex; gap: 8px;
+  overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin;
+}
+.prakiraan-jam:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; border-radius: 8px; }
+.jam-kartu {
+  flex: 0 0 112px; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-align: center; padding: 10px 6px 8px; border-radius: 10px; border: 1px solid var(--garis-halus);
+  background: var(--halaman); border-top-width: 4px;
+}
+.jam-kartu[data-kategori="dingin"] { border-top-color: var(--k-dingin); }
+.jam-kartu[data-kategori="nyaman"] { border-top-color: var(--k-nyaman); }
+.jam-kartu[data-kategori="agak-nyaman"] { border-top-color: var(--k-agak-nyaman); }
+.jam-kartu[data-kategori="tidak-nyaman"] { border-top-color: var(--k-tidak-nyaman); }
+.jam-kartu.sekarang { border-color: var(--teks-2); border-top-width: 4px; background: var(--kartu); }
+.jam-kartu.sekarang[data-kategori="dingin"] { border-top-color: var(--k-dingin); }
+.jam-kartu.sekarang[data-kategori="nyaman"] { border-top-color: var(--k-nyaman); }
+.jam-kartu.sekarang[data-kategori="agak-nyaman"] { border-top-color: var(--k-agak-nyaman); }
+.jam-kartu.sekarang[data-kategori="tidak-nyaman"] { border-top-color: var(--k-tidak-nyaman); }
+.jam-hari { font-size: 0.72rem; color: var(--teks-2); font-weight: 600; min-height: 1.1em; }
+.jam-kartu.sekarang .jam-hari { color: var(--teks); }
+.jam-waktu { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.jam-ikon { height: 32px; display: grid; place-items: center; }
+.jam-cuaca { font-size: 0.72rem; color: var(--teks-2); line-height: 1.2; min-height: 2.4em; display: grid; place-items: center; }
+.jam-suhu { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.jam-rh { font-size: 0.75rem; color: var(--teks-2); font-variant-numeric: tabular-nums; }
+.jam-thi {
+  margin-top: 4px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 999px; color: var(--teks-di-warna); white-space: nowrap;
+}
+.jam-kartu[data-kategori="dingin"] .jam-thi { background: var(--k-dingin); }
+.jam-kartu[data-kategori="nyaman"] .jam-thi { background: var(--k-nyaman); }
+.jam-kartu[data-kategori="agak-nyaman"] .jam-thi { background: var(--k-agak-nyaman); color: var(--teks-di-kuning); }
+.jam-kartu[data-kategori="tidak-nyaman"] .jam-thi { background: var(--k-tidak-nyaman); }
+
+/* ---------- Grafik: garis pemisah hari ---------- */
+.grid-hari { stroke: var(--sumbu); stroke-width: 1; stroke-dasharray: 1 3; }
+
+/* ---------- Laptop/desktop (≥ 960px): peta di kiri, panel informasi di kanan ---------- */
 @media (min-width: 960px) {
   .halaman {
-    max-width: 1180px;
+    max-width: 1240px;
     padding: 28px 32px 48px;
     gap: 18px 24px;
-    grid-template-columns: minmax(320px, 380px) 1fr;
+    grid-template-columns: 1fr minmax(340px, 400px);
     grid-template-areas:
       "kepala     kepala"
       "peringatan peringatan"
-      "utama      tren"
-      "pendukung  tren"
-      "ajakan     tren"
+      "peta       utama"
+      "peta       pendukung"
+      "peta       ajakan"
+      "prakiraan  prakiraan"
+      "tren       tren"
       "penjelasan penjelasan"
       "kaki       kaki";
     align-items: start;
   }
   .zona-kepala { grid-area: kepala; grid-template-columns: 1fr minmax(260px, 340px); align-items: center; }
   .zona-peringatan { grid-area: peringatan; }
+  .zona-peta { grid-area: peta; align-self: stretch; }
+  .zona-peta .peta { flex: 1; height: auto; min-height: 420px; }
   .zona-utama { grid-area: utama; }
   .zona-pendukung { grid-area: pendukung; }
   .zona-ajakan { grid-area: ajakan; }
-  .zona-tren { grid-area: tren; align-self: stretch; display: flex; flex-direction: column; }
-  .zona-tren .grafik { flex: 1; min-height: 320px; }
+  .zona-prakiraan { grid-area: prakiraan; }
+  .zona-tren { grid-area: tren; }
+  .zona-tren .grafik { height: 320px; }
   .zona-penjelasan { grid-area: penjelasan; }
   .zona-kaki { grid-area: kaki; }
 
   h1 { font-size: 1.75rem; }
   .nilai-besar { font-size: 4.5rem; }
+  .jam-kartu { flex-basis: 124px; }
   .legenda { grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .legenda li { flex-direction: column; border-color: var(--garis-halus); }
   .legenda li.aktif { border-color: var(--teks-2); }
   .tombol { transition: filter 0.15s; }
   .tombol:hover { filter: brightness(1.08); }
 }
+
+/* ---------- Kotak berwarna: kartu utama mengikuti kategori, kartu pendukung per parameter ---------- */
+.kartu-utama[data-kategori="dingin"] { background: color-mix(in srgb, var(--k-dingin) var(--tint), var(--kartu)); }
+.kartu-utama[data-kategori="nyaman"] { background: color-mix(in srgb, var(--k-nyaman) var(--tint), var(--kartu)); }
+.kartu-utama[data-kategori="agak-nyaman"] { background: color-mix(in srgb, var(--k-agak-nyaman) calc(var(--tint) + 5%), var(--kartu)); }
+.kartu-utama[data-kategori="tidak-nyaman"] { background: color-mix(in srgb, var(--k-tidak-nyaman) var(--tint), var(--kartu)); }
+.kartu-utama .label-kecil, .kartu-utama .redup { color: var(--teks-2); }
+.kartu-utama .tag { background: var(--kartu); }
+.kartu-suhu { background: color-mix(in srgb, var(--p-suhu) var(--tint), var(--kartu)); border-color: color-mix(in srgb, var(--p-suhu) 45%, transparent); }
+.kartu-rh { background: color-mix(in srgb, var(--p-rh) var(--tint), var(--kartu)); border-color: color-mix(in srgb, var(--p-rh) 45%, transparent); }
+.kartu-cuaca { background: color-mix(in srgb, var(--p-cuaca) var(--tint), var(--kartu)); border-color: color-mix(in srgb, var(--p-cuaca) 45%, transparent); }
+.kecil-kartu .label-kecil { display: inline-flex; align-items: center; gap: 4px; justify-content: center; }
+.kartu-suhu .ikon-param { color: var(--p-suhu); }
+.kartu-rh .ikon-param { color: var(--p-rh); }
+.kartu-cuaca .ikon-param, .kartu-cuaca .ikon-cuaca { color: var(--p-cuaca); }
+
+/* ---------- Grafik tren ---------- */
+.malam { fill: var(--teks); opacity: 0.055; }
+.label-malam { font-size: 10.5px; fill: var(--teks-2); letter-spacing: 0.04em; }
+.ambang { stroke: var(--sumbu); stroke-width: 1; stroke-dasharray: 4 4; }
+.label-zona text { font-size: 11px; fill: var(--teks-2); paint-order: stroke; stroke: var(--kartu); stroke-width: 3px; stroke-linejoin: round; }
+.label-zona circle { stroke: var(--kartu); stroke-width: 1.5; }
+.area-thi { stroke: none; }
+.titik-data { fill: var(--warna); stroke: var(--kartu); stroke-width: 1.5; }
+.titik-data.prakiraan { fill: var(--kartu); stroke: var(--warna); stroke-width: 1.75; }
+.anotasi { font-size: 11.5px; font-weight: 700; fill: var(--teks); paint-order: stroke; stroke: var(--kartu); stroke-width: 3.5px; stroke-linejoin: round; font-variant-numeric: tabular-nums; }
+.cincin-anotasi { fill: none; stroke: var(--teks); stroke-width: 1.25; }
+.tick-hari { font-weight: 600; fill: var(--teks); }
+.titik-aktif { r: 6; }

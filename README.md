@@ -31,13 +31,16 @@ API BMKG ──► Pipeline Node.js ──► public/data/*.json ──► Cloud
 | `pipeline/aggregate.mjs` | Rata-rata per kecamatan per slot 3 jam, lalu hitung THI |
 | `pipeline/history.mjs` | Simpan riwayat bulanan + `recent.json` (48 jam terakhir) |
 | `config/wilayah.json` | 30 kecamatan & 151 kelurahan (kode adm4) |
-| `public/index.html` | Halaman dashboard (7 zona sesuai Lampiran A proposal) |
+| `public/index.html` | Halaman dashboard: peta, kartu THI, prakiraan per 3 jam, grafik tren, penjelasan |
 | `public/css/style.css` | Tampilan mobile-first, mode terang & gelap |
 | `public/js/thi.js` | **Rumus THI & kategori** — dipakai bersama oleh pipeline dan browser |
 | `public/js/config.js` | **Pengaturan yang boleh diubah tim** (tautan formulir, kecamatan awal) |
 | `public/js/data.js` | Memuat JSON, memilih slot terdekat, ringkasan harian |
 | `public/js/render.js` | Mengisi isi tiap zona |
 | `public/js/chart.js` | Grafik tren THI (SVG, tanpa library) + tabel data |
+| `public/js/map.js` | Peta titik kecamatan (Leaflet); klik titik untuk memilih kecamatan |
+| `public/geo/kecamatan-bandung.geojson` | Titik tengah 30 kecamatan (cahyadsn/wilayah_boundaries, MIT) |
+| `public/vendor/leaflet/` | Library peta Leaflet 1.9.4 (disimpan di proyek, tanpa CDN) |
 | `public/js/app.js` | Titik masuk dashboard |
 | `public/data/` | Ditulis otomatis oleh pipeline — **jangan diedit manual** |
 | `tests/` | Kasus uji rumus THI dan pipeline |
