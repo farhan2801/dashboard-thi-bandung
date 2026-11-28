@@ -185,10 +185,12 @@ th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--gari
 .ikon { flex: none; }
 
 /* Zona 6 */
-.ajakan { text-align: center; }
+.ajakan { display: grid; gap: 6px; padding: 22px 22px 20px; }
+.ajakan h2 { font-size: 1.1rem; }
+.ajakan p { font-size: 0.9rem; margin-bottom: 8px; }
 .tombol {
-  display: inline-block; width: 100%; padding: 14px; border-radius: var(--radius); background: var(--aksen);
-  color: #fff; font-weight: 600; text-decoration: none; min-height: 48px;
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 14px 18px; border-radius: var(--radius);
+  background: var(--aksen); color: #fff; font-weight: 700; font-size: 1rem; text-decoration: none; min-height: 52px;
 }
 .tombol:focus-visible { outline: 3px solid var(--teks); outline-offset: 2px; }
 
@@ -302,10 +304,10 @@ body.memuat .nilai-besar { opacity: 0.4; }
       "peringatan peringatan"
       "peta       utama"
       "peta       pendukung"
-      "peta       ajakan"
       "prakiraan  prakiraan"
       "tren       tren"
       "penjelasan penjelasan"
+      "ajakan     ajakan"
       "kaki       kaki";
     align-items: start;
   }

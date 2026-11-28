@@ -7,6 +7,7 @@ import { muatSemua, gabungSlot, slotTerdekat, ringkasanHariIni, jam, angka } fro
 import { KATEGORI } from './thi.js';
 import {
   isiPilihanKecamatan, isiWaktuPembaruan, isiKartuUtama, isiPenjelasan, isiPeringatan, isiPrakiraanJam, ikonSVG,
+  waktuPrakiraan,
 } from './render.js';
 import { renderTren } from './chart.js';
 import { buatPeta } from './map.js';
@@ -60,15 +61,16 @@ function tampilkan() {
   document.getElementById('cakupan-kecamatan').textContent =
     `Rata-rata prakiraan ${kec.kelurahan_ok} dari ${kec.jumlah_kelurahan} kelurahan`;
 
-  const tombol = document.getElementById('tombol-formulir');
+  // Kotak ajakan formulir hanya tampil bila FORM_URL diisi di config.js
   const href = tautanFormulir(slot);
-  tombol.hidden = !href;
-  if (href) tombol.href = href;
+  document.querySelector('.zona-ajakan').hidden = !href;
+  if (href) document.getElementById('tombol-formulir').href = href;
 
   const pesan = [];
   if (DATA.meta.contoh) pesan.push('Ini DATA CONTOH untuk uji tampilan, bukan data BMKG. Data asli muncul setelah pipeline berjalan.');
-  const umurJam = (nowMs - Date.parse(DATA.meta.generated_at)) / 3600e3;
-  if (umurJam > CONFIG.JAM_DATA_USANG) pesan.push(`Data belum diperbarui sejak ${Math.floor(umurJam)} jam lalu. Nilai yang tampil mungkin sudah tidak terkini.`);
+  // BMKG merilis prakiraan dua kali sehari; prakiraan yang lebih tua dari batas ini dianggap tertunda
+  const umurJam = (nowMs - waktuPrakiraan(DATA.meta)) / 3600e3;
+  if (umurJam > CONFIG.JAM_DATA_USANG) pesan.push(`Prakiraan BMKG terakhir dibuat ${Math.floor(umurJam)} jam lalu. Pembaruan berikutnya mungkin tertunda, jadi nilai yang tampil bisa kurang terkini.`);
   if (kec.kelurahan_ok < kec.jumlah_kelurahan) pesan.push(`Sebagian data kelurahan di kecamatan ini tidak tersedia pada pembaruan terakhir.`);
   isiPeringatan(pesan);
 }

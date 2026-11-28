@@ -30,7 +30,7 @@
           </div>
         </div>
         <ul class="info-chip">
-          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6.2 9.1 4.5 4.5 0 0 0 7 18z"/></svg>Data prakiraan BMKG</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6.2 9.1 4.5 4.5 0 0 0 7 18z"/></svg>Sumber data: BMKG</li>
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>30 kecamatan</li>
           <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span id="waktu-pembaruan">Memuat data…</span></li>
         </ul>
@@ -111,14 +111,19 @@
     </section>
 
     <!-- Zona 6 — Ajakan -->
-    <section class="ajakan zona-ajakan">
-      <a id="tombol-formulir" class="tombol" href="#" target="_blank" rel="noopener" hidden>Isi formulir umpan balik</a>
+    <section class="kartu ajakan zona-ajakan" aria-labelledby="judul-ajakan">
+      <h2 id="judul-ajakan">Punya masukan untuk SiNyaman?</h2>
+      <p class="redup">Bantu kami mengembangkan SiNyaman menjadi lebih baik. Sampaikan kritik, saran, atau pengalaman kamu selama menggunakan SiNyaman.</p>
+      <a id="tombol-formulir" class="tombol" href="https://bit.ly/FeedbackSiNyaman" target="_blank" rel="noopener">
+        Isi Formulir Feedback
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </section>
 
     <!-- Zona 7 — Kaki halaman -->
     <footer class="kaki zona-kaki">
       <p><strong>Sumber data: BMKG</strong> (Badan Meteorologi, Klimatologi, dan Geofisika), prakiraan cuaca per kelurahan.</p>
-      <p>Batas kecamatan: cahyadsn/wilayah_boundaries (kode Kemendagri). Peta dasar: © kontributor OpenStreetMap.</p>
+      <p>Titik kecamatan: cahyadsn/wilayah_boundaries (kode Kemendagri). Peta dasar: © kontributor OpenStreetMap.</p>
       <p>Nilai bersifat prakiraan, bukan pengukuran langsung, bukan diagnosis kesehatan, dan bukan peringatan resmi.
         Untuk informasi resmi, rujuk BMKG.</p>
       <p><strong>SiNyaman</strong> — Sistem Informasi Kenyamanan Termal Kota Bandung. Dikembangkan oleh Kelompok 7, Program Studi Meteorologi ITB.</p>
