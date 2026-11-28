@@ -7,8 +7,8 @@
  *  - nama kategori selalu tertulis (warna tidak pernah menjadi satu-satunya penanda)
  *  - hover/sentuh/panah keyboard → garis bidik + tooltip; tabel data tersedia
  */
-import { KATEGORI, kategoriTHI } from './thi.js';
-import { jam, hariSingkat, jamWIB, angka } from './data.js';
+import { KATEGORI, kategoriTHI } from './thi.js?v=8';
+import { jam, hariSingkat, jamWIB, angka } from './data.js?v=8';
 
 const NS = 'http://www.w3.org/2000/svg';
 const el = (tag, attrs = {}, parent) => {

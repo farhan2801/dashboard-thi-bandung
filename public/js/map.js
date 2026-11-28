@@ -9,9 +9,9 @@
  * (dari cahyadsn/wilayah_boundaries, MIT License; kode Kemendagri).
  * Library: Leaflet 1.9.4 (public/vendor/leaflet, BSD-2-Clause), dimuat sebagai variabel global L.
  */
-import { kategoriTHI } from './thi.js';
-import { angka } from './data.js';
-import { ikonSVG } from './render.js';
+import { kategoriTHI } from './thi.js?v=8';
+import { angka } from './data.js?v=8';
+import { ikonSVG } from './render.js?v=8';
 
 function htmlTitik(nama, slot, aktif) {
   const k = slot ? kategoriTHI(slot.thi) : null;

@@ -1,16 +1,16 @@
 /**
  * app.js — titik masuk dashboard: muat data, pilih kecamatan, tampilkan semua zona.
  */
-import { CONFIG } from './config.js';
-import { kategoriTHI } from './thi.js';
-import { muatSemua, gabungSlot, slotTerdekat, ringkasanHariIni, jam, angka } from './data.js';
-import { KATEGORI } from './thi.js';
+import { CONFIG } from './config.js?v=8';
+import { kategoriTHI } from './thi.js?v=8';
+import { muatSemua, gabungSlot, slotTerdekat, ringkasanHariIni, jam, angka } from './data.js?v=8';
+import { KATEGORI } from './thi.js?v=8';
 import {
   isiPilihanKecamatan, isiWaktuPembaruan, isiKartuUtama, isiPenjelasan, isiPeringatan, isiPrakiraanJam, ikonSVG,
   waktuPrakiraan,
-} from './render.js';
-import { renderTren } from './chart.js';
-import { buatPeta } from './map.js';
+} from './render.js?v=8';
+import { renderTren } from './chart.js?v=8';
+import { buatPeta } from './map.js?v=8';
 
 const KUNCI_SIMPAN = 'thi-bandung:kecamatan';
 let DATA = null;

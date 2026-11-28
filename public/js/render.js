@@ -2,8 +2,8 @@
  * render.js — mengisi zona-zona dashboard (lihat index.html).
  * Semua teks dimasukkan dengan textContent (bukan innerHTML) agar aman.
  */
-import { KATEGORI, kategoriTHI } from './thi.js';
-import { jam, tanggal, angka, kunciHari, jamWIB } from './data.js';
+import { KATEGORI, kategoriTHI } from './thi.js?v=8';
+import { jam, tanggal, angka, kunciHari, jamWIB } from './data.js?v=8';
 
 const $ = (id) => document.getElementById(id);
 
@@ -61,11 +61,29 @@ export function isiPilihanKecamatan(latest, kodeTerpilih) {
   }
 }
 
+/** Waktu prakiraan BMKG (analysis_date, UTC tanpa zona) → milidetik. */
+export function waktuPrakiraan(meta) {
+  const s = meta?.analysis_date;
+  if (!s) return NaN;
+  return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? s : `${s}Z`);
+}
+
+/**
+ * Label waktu di banner = waktu BMKG membuat prakiraan (bukan waktu pipeline berjalan).
+ * Waktu pengambilan data ditampilkan sebagai keterangan saat label disorot.
+ */
 export function isiWaktuPembaruan(meta) {
-  const ms = Date.parse(meta.generated_at);
-  $('waktu-pembaruan').textContent = Number.isFinite(ms)
-    ? `Diperbarui ${tanggal(ms)}, ${jam(ms)} WIB`
-    : 'Waktu pembaruan tidak diketahui';
+  const el = $('waktu-pembaruan');
+  const msBMKG = waktuPrakiraan(meta);
+  const msAmbil = Date.parse(meta.generated_at);
+  el.textContent = Number.isFinite(msBMKG)
+    ? `Prakiraan BMKG ${tanggal(msBMKG)}, ${jam(msBMKG)} WIB`
+    : 'Waktu prakiraan tidak diketahui';
+  const keterangan = Number.isFinite(msAmbil)
+    ? `Data diambil dari BMKG pada ${tanggal(msAmbil)}, ${jam(msAmbil)} WIB. BMKG memperbarui prakiraan dua kali sehari.`
+    : '';
+  el.title = keterangan;
+  el.parentElement.title = keterangan;
 }
 
 /** Zona 2 & 3 — kartu utama dan kartu pendukung. */
